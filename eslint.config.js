@@ -7,5 +7,6 @@ export default antfu({
   },
   rules: {
     'no-console': 'warn',
+    'if-newline': 'off',
   },
 })
