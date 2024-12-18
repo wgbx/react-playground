@@ -1,6 +1,6 @@
+import { useRouter } from '@/hooks'
 import { useMemoizedFn } from 'ahooks'
 import { PAGE } from './const'
-import { useRouter } from '@/hooks'
 
 export default function App() {
   const { navigate } = useRouter()
