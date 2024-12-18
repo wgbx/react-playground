@@ -1,9 +1,10 @@
 import type { RouteProps } from 'react-router'
+import Form from '@/pages/form'
 import Home from '@/pages/home'
 import ReRender from '@/pages/reRender'
 import { Navigate } from 'react-router'
 
-export const ROUTER = [
+export const ROUTER: RouteProps[] = [
   {
     path: '/',
     element: <Navigate to="/home" replace />,
@@ -16,4 +17,8 @@ export const ROUTER = [
     path: '/reRender',
     element: <ReRender />,
   },
-] as RouteProps[]
+  {
+    path: '/form',
+    element: <Form />,
+  },
+]
