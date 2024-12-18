@@ -1,10 +1,10 @@
-import { BrowserRouter, Routes, Route, RouteProps } from 'react-router'
+import { Navigate, BrowserRouter, Routes, Route, RouteProps } from 'react-router'
 import Home from '@/pages/home'
 
 const ROUTER = [
   {
     path: '/',
-    redirect: '/home',
+    element: <Navigate to="/home" replace />
   },
   {
     path: '/home',
