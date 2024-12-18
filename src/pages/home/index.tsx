@@ -10,7 +10,7 @@ export default function App() {
   })
 
   return (
-    <div className="flex-center gap-2">
+    <div className="flex-center gap-10">
       {PAGE.map(item => (
         <button type="button" onClick={() => handleGoPage(item.path)} key={item.path}>
           {item.name}

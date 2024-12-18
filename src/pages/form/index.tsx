@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
+import './index.module.scss'
 
 interface FormData {
   username: string
@@ -15,7 +16,11 @@ const schema = yup.object().shape({
 })
 
 export default function Form() {
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
     resolver: yupResolver(schema),
   })
 
@@ -24,10 +29,10 @@ export default function Form() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className="flex-col">
       <label>用户名: </label>
       <input {...register('username')} />
-      {errors.username && <p>{errors.username.message}</p>}
+      {errors.username && <p className="error-tip">{errors.username.message}</p>}
 
       <label>密码: </label>
       <input type="password" {...register('password')} />
@@ -37,7 +42,7 @@ export default function Form() {
       <input {...register('email')} />
       {errors.email && <p>{errors.email.message}</p>}
 
-      <input type="submit" value="提交" />
+      <input className="mt-3 cursor-pointer" type="submit" value="提交" />
     </form>
   )
 }
