@@ -1,16 +1,5 @@
-import { Navigate, BrowserRouter, Routes, Route, RouteProps } from 'react-router'
-import Home from '@/pages/home'
-
-const ROUTER = [
-  {
-    path: '/',
-    element: <Navigate to="/home" replace />
-  },
-  {
-    path: '/home',
-    element: <Home />
-  }
-] as RouteProps[]
+import { BrowserRouter, Routes, Route } from 'react-router'
+import { ROUTER } from './router'
 
 export default function RoutesConfig() {
   return (
