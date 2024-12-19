@@ -8,5 +8,6 @@ export default antfu({
   rules: {
     'no-console': 'warn',
     'if-newline': 'off',
+    '@stylistic/js/eol-last': 'off',
   },
 })

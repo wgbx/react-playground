@@ -1,144 +1,180 @@
-import { yupResolver } from '@hookform/resolvers/yup'
+import { Button, Card, Form, Input, InputNumber, message, Result, Select, Space, Typography } from 'antd'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import * as yup from 'yup'
+import { COUNTRY_OPTIONS, PAYMENT_OPTIONS, PRODUCT_OPTIONS } from './const '
 import './index.scss'
 
-interface FormData {
-  firstName: string
-  lastName: string
-  email: string
-  password: string
-  confirmPassword: string
-  address: string
-  city: string
-  zipCode: string
-  country: string
-  product: string
-  quantity: number
-  paymentMethod: string
-}
-
-// 定义表单验证规则
-const schema = yup.object().shape({
-  firstName: yup.string().required('名字是必填项'),
-  lastName: yup.string().required('姓氏是必填项'),
-  email: yup.string().email('请输入有效的邮箱地址').required('邮箱是必填项'),
-  password: yup.string().min(6, '密码至少需要6个字符').required('密码是必填项'),
-  confirmPassword: yup.string()
-    .oneOf([yup.ref('password')], '密码必须匹配')
-    .required('确认密码是必填项'),
-  address: yup.string().required('地址是必填项'),
-  city: yup.string().required('城市是必填项'),
-  zipCode: yup.string().required('邮编是必填项'),
-  country: yup.string().required('国家是必填项'),
-  product: yup.string().required('请选择一个产品'),
-  quantity: yup.number().required('数量是必填项').min(1, '数量至少为1'),
-  paymentMethod: yup.string().required('请选择一种付款方式'),
-})
+const { Title } = Typography
 
 function OrderForm() {
   const [submitted, setSubmitted] = useState(false)
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    resolver: yupResolver(schema),
-  })
+  const [form] = Form.useForm()
 
   const onSubmit = (data: FormData) => {
     console.log(data)
     setSubmitted(true)
+    message.success('订单提交成功！')
   }
 
   return (
-    <div className="complex-form-page form-container">
+    <Space direction="vertical" size="large" style={{ width: '100%', padding: '24px' }}>
       {submitted
         ? (
-            <div className="success-message">订单提交成功！</div>
+            <Card>
+              <Result
+                status="success"
+                title="订单提交成功！"
+                extra={[
+                  <Button
+                    key="continue"
+                    type="primary"
+                    onClick={() => setSubmitted(false)}
+                  >
+                    继续提交
+                  </Button>,
+                ]}
+              />
+            </Card>
           )
         : (
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <h2>用户信息</h2>
-              <div className="form-group">
-                <label>名字</label>
-                <input {...register('firstName')} />
-                <p>{errors.firstName?.message}</p>
-              </div>
-              <div className="form-group">
-                <label>姓氏</label>
-                <input {...register('lastName')} />
-                <p>{errors.lastName?.message}</p>
-              </div>
-              <div className="form-group">
-                <label>邮箱</label>
-                <input {...register('email')} />
-                <p>{errors.email?.message}</p>
-              </div>
-              <div className="form-group">
-                <label>密码</label>
-                <input type="password" {...register('password')} />
-                <p>{errors.password?.message}</p>
-              </div>
-              <div className="form-group">
-                <label>确认密码</label>
-                <input type="password" {...register('confirmPassword')} />
-                <p>{errors.confirmPassword?.message}</p>
-              </div>
+            <Card>
+              <Form form={form} onFinish={onSubmit} layout="vertical">
+                <Title level={4}>用户信息</Title>
+                <Form.Item
+                  label="名字"
+                  name="firstName"
+                  rules={[{ required: true, message: '名字是必填项' }]}
+                >
+                  <Input />
+                </Form.Item>
 
-              <h2>联系信息</h2>
-              <div className="form-group">
-                <label>地址</label>
-                <input {...register('address')} />
-                <p>{errors.address?.message}</p>
-              </div>
-              <div className="form-group">
-                <label>城市</label>
-                <input {...register('city')} />
-                <p>{errors.city?.message}</p>
-              </div>
-              <div className="form-group">
-                <label>邮编</label>
-                <input {...register('zipCode')} />
-                <p>{errors.zipCode?.message}</p>
-              </div>
-              <div className="form-group">
-                <label>国家</label>
-                <select {...register('country')}>
-                  <option value="">选择国家</option>
-                  <option value="China">中国</option>
-                  <option value="USA">美国</option>
-                  <option value="UK">英国</option>
-                </select>
-                <p>{errors.country?.message}</p>
-              </div>
+                <Form.Item
+                  label="姓氏"
+                  name="lastName"
+                  rules={[{ required: true, message: '姓氏是必填项' }]}
+                >
+                  <Input />
+                </Form.Item>
 
-              <h2>订单信息</h2>
-              <div className="form-group">
-                <label>产品</label>
-                <select {...register('product')}>
-                  <option value="">选择产品</option>
-                  <option value="Product1">产品1</option>
-                  <option value="Product2">产品2</option>
-                </select>
-                <p>{errors.product?.message}</p>
-              </div>
-              <div className="form-group">
-                <label>数量</label>
-                <input type="number" {...register('quantity')} />
-                <p>{errors.quantity?.message}</p>
-              </div>
-              <div className="form-group">
-                <label>付款方式</label>
-                <select {...register('paymentMethod')}>
-                  <option value="">选择付款方式</option>
-                  <option value="CreditCard">信用卡</option>
-                  <option value="PayPal">PayPal</option>
-                </select>
-                <p>{errors.paymentMethod?.message}</p>
-              </div>
+                <Form.Item
+                  label="邮箱"
+                  name="email"
+                  rules={[
+                    { required: true, message: '邮箱是必填项' },
+                    { type: 'email', message: '请输入有效的邮箱地址' },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
 
-              <button type="submit">提交订单</button>
-            </form>
+                <Form.Item
+                  label="密码"
+                  name="password"
+                  rules={[
+                    { required: true, message: '密码是必填项' },
+                    { min: 6, message: '密码至少需要6个字符' },
+                  ]}
+                >
+                  <Input.Password />
+                </Form.Item>
+
+                <Form.Item
+                  label="确认密码"
+                  name="confirmPassword"
+                  dependencies={['password']}
+                  rules={[
+                    { required: true, message: '确认密码是必填项' },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (!value || getFieldValue('password') === value) {
+                          return Promise.resolve()
+                        }
+                        return Promise.reject(new Error('密码必须匹配'))
+                      },
+                    }),
+                  ]}
+                >
+                  <Input.Password />
+                </Form.Item>
+
+                <Title level={4}>联系信息</Title>
+                <Form.Item
+                  label="地址"
+                  name="address"
+                  rules={[{ required: true, message: '地址是必填项' }]}
+                >
+                  <Input />
+                </Form.Item>
+
+                <Form.Item
+                  label="城市"
+                  name="city"
+                  rules={[{ required: true, message: '城市是必填项' }]}
+                >
+                  <Input />
+                </Form.Item>
+
+                <Form.Item
+                  label="邮编"
+                  name="zipCode"
+                  rules={[{ required: true, message: '邮编是必填项' }]}
+                >
+                  <Input />
+                </Form.Item>
+
+                <Form.Item
+                  label="国家"
+                  name="country"
+                  rules={[{ required: true, message: '国家是必填项' }]}
+                >
+                  <Select
+                    placeholder="选择国家"
+                    options={COUNTRY_OPTIONS}
+                  />
+                </Form.Item>
+
+                <Title level={4}>订单信息</Title>
+                <Form.Item
+                  label="产品"
+                  name="product"
+                  rules={[{ required: true, message: '请选择一个产品' }]}
+                >
+                  <Select
+                    placeholder="选择产品"
+                    options={PRODUCT_OPTIONS}
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  label="数量"
+                  name="quantity"
+                  rules={[
+                    { required: true, message: '数量是必填项' },
+                    { type: 'number', min: 1, message: '数量至少为1' },
+                  ]}
+                >
+                  <InputNumber min={1} style={{ width: '100%' }} />
+                </Form.Item>
+
+                <Form.Item
+                  label="付款方式"
+                  name="paymentMethod"
+                  rules={[{ required: true, message: '请选择一种付款方式' }]}
+                >
+                  <Select
+                    placeholder="选择付款方式"
+                    options={PAYMENT_OPTIONS}
+                  />
+                </Form.Item>
+
+                <Form.Item>
+                  <Button type="primary" htmlType="submit" block>
+                    提交订单
+                  </Button>
+                </Form.Item>
+              </Form>
+            </Card>
           )}
-    </div>
+    </Space>
   )
 }
 

@@ -1,61 +1,14 @@
 .complex-form-page {
-  width: 800px;
-  margin: auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
-  .success-message {
-    text-align: center;
-    color: green;
-    font-size: 1.2em;
+  .ant-card {
+    max-width: 800px;
+    margin: 0 auto;
   }
 
-  h2 {
-    margin-top: 20px;
-    border-bottom: 2px solid #007bff;
-    padding-bottom: 5px;
+  .ant-form-item {
+    margin-bottom: 24px;
   }
 
-  .form-group {
-    margin-bottom: 15px;
-  }
-
-  label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-  }
-
-  input,
-  select {
-    width: 90%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-
-  select {
-    width: 93%;
-  }
-
-  p {
-    color: red;
-    font-size: 0.9em;
-  }
-
-  button {
-    width: 93%;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-
-  button:hover {
-    background-color: #0056b3;
+  .ant-typography {
+    margin: 24px 0 16px;
   }
 }
