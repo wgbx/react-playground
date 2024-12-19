@@ -1,7 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useForm } from 'react-hook-form'
+import { Form as AntForm, Button, Card, Input, Typography } from 'antd'
+import { Controller, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import './index.scss'
+
+const { Title } = Typography
 
 interface FormData {
   username: string
@@ -17,7 +20,7 @@ const schema = yup.object().shape({
 
 export default function Form() {
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
@@ -29,20 +32,59 @@ export default function Form() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="form-page flex-col">
-      <label>用户名: </label>
-      <input {...register('username')} />
-      {errors.username && <p className="error-tip">{errors.username.message}</p>}
+    <Card className="form-container">
+      <Title level={3} style={{ textAlign: 'center', marginBottom: '24px' }}>
+        用户注册
+      </Title>
+      <AntForm onFinish={handleSubmit(onSubmit)} layout="vertical">
+        <AntForm.Item
+          label="用户名"
+          validateStatus={errors.username ? 'error' : ''}
+          help={errors.username?.message}
+        >
+          <Controller
+            name="username"
+            control={control}
+            render={({ field }) => (
+              <Input {...field} placeholder="请输入用户名" />
+            )}
+          />
+        </AntForm.Item>
 
-      <label>密码: </label>
-      <input type="password" {...register('password')} />
-      {errors.password && <p>{errors.password.message}</p>}
+        <AntForm.Item
+          label="密码"
+          validateStatus={errors.password ? 'error' : ''}
+          help={errors.password?.message}
+        >
+          <Controller
+            name="password"
+            control={control}
+            render={({ field }) => (
+              <Input.Password {...field} placeholder="请输入密码" />
+            )}
+          />
+        </AntForm.Item>
 
-      <label>电子邮件: </label>
-      <input {...register('email')} />
-      {errors.email && <p>{errors.email.message}</p>}
+        <AntForm.Item
+          label="电子邮件"
+          validateStatus={errors.email ? 'error' : ''}
+          help={errors.email?.message}
+        >
+          <Controller
+            name="email"
+            control={control}
+            render={({ field }) => (
+              <Input {...field} placeholder="请输入电子邮件" />
+            )}
+          />
+        </AntForm.Item>
 
-      <input className="mt-3 cursor-pointer" type="submit" value="提交" />
-    </form>
+        <AntForm.Item>
+          <Button type="primary" htmlType="submit" block>
+            提交
+          </Button>
+        </AntForm.Item>
+      </AntForm>
+    </Card>
   )
 }

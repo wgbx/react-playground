@@ -1,13 +1,58 @@
+import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, Card, Form, Input, InputNumber, message, Result, Select, Space, Typography } from 'antd'
 import { useState } from 'react'
-import { COUNTRY_OPTIONS, PAYMENT_OPTIONS, PRODUCT_OPTIONS } from './const '
+import { Controller, useForm } from 'react-hook-form'
+import * as yup from 'yup'
+import { COUNTRY_OPTIONS, PAYMENT_OPTIONS, PRODUCT_OPTIONS } from './const'
 import './index.scss'
 
 const { Title } = Typography
 
+interface FormData {
+  firstName: string
+  lastName: string
+  email: string
+  password: string
+  confirmPassword: string
+  address: string
+  city: string
+  zipCode: string
+  country: string
+  product: string
+  quantity: number
+  paymentMethod: string
+}
+
+const schema = yup.object().shape({
+  firstName: yup.string().required('名字是必填项'),
+  lastName: yup.string().required('姓氏是必填项'),
+  email: yup.string().email('请输入有效的邮箱地址').required('邮箱是必填项'),
+  password: yup.string()
+    .required('密码是必填项')
+    .min(6, '密码至少需要6个字符'),
+  confirmPassword: yup.string()
+    .required('确认密码是必填项')
+    .oneOf([yup.ref('password')], '密码必须匹配'),
+  address: yup.string().required('地址是必填项'),
+  city: yup.string().required('城市是必填项'),
+  zipCode: yup.string().required('邮编是必填项'),
+  country: yup.string().required('国家是必填项'),
+  product: yup.string().required('请选择一个产品'),
+  quantity: yup.number()
+    .required('数量是必填项')
+    .min(1, '数量至少为1'),
+  paymentMethod: yup.string().required('请选择一种付款方式'),
+})
+
 function OrderForm() {
   const [submitted, setSubmitted] = useState(false)
-  const [form] = Form.useForm()
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: yupResolver(schema),
+  })
 
   const onSubmit = (data: FormData) => {
     console.log(data)
@@ -16,7 +61,7 @@ function OrderForm() {
   }
 
   return (
-    <Space direction="vertical" size="large" style={{ width: '100%', padding: '24px' }}>
+    <Space direction="vertical" size="large" className="w-100% max-w-240">
       {submitted
         ? (
             <Card>
@@ -24,11 +69,7 @@ function OrderForm() {
                 status="success"
                 title="订单提交成功！"
                 extra={[
-                  <Button
-                    key="continue"
-                    type="primary"
-                    onClick={() => setSubmitted(false)}
-                  >
+                  <Button key="continue" type="primary" onClick={() => setSubmitted(false)}>
                     继续提交
                   </Button>,
                 ]}
@@ -37,132 +78,159 @@ function OrderForm() {
           )
         : (
             <Card>
-              <Form form={form} onFinish={onSubmit} layout="vertical">
+              <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
                 <Title level={4}>用户信息</Title>
                 <Form.Item
                   label="名字"
-                  name="firstName"
-                  rules={[{ required: true, message: '名字是必填项' }]}
+                  validateStatus={errors.firstName ? 'error' : ''}
+                  help={errors.firstName?.message}
                 >
-                  <Input />
+                  <Controller
+                    name="firstName"
+                    control={control}
+                    render={({ field }) => <Input {...field} />}
+                  />
                 </Form.Item>
 
                 <Form.Item
                   label="姓氏"
-                  name="lastName"
-                  rules={[{ required: true, message: '姓氏是必填项' }]}
+                  validateStatus={errors.lastName ? 'error' : ''}
+                  help={errors.lastName?.message}
                 >
-                  <Input />
+                  <Controller
+                    name="lastName"
+                    control={control}
+                    render={({ field }) => <Input {...field} />}
+                  />
                 </Form.Item>
 
                 <Form.Item
                   label="邮箱"
-                  name="email"
-                  rules={[
-                    { required: true, message: '邮箱是必填项' },
-                    { type: 'email', message: '请输入有效的邮箱地址' },
-                  ]}
+                  validateStatus={errors.email ? 'error' : ''}
+                  help={errors.email?.message}
                 >
-                  <Input />
+                  <Controller
+                    name="email"
+                    control={control}
+                    render={({ field }) => <Input {...field} />}
+                  />
                 </Form.Item>
 
                 <Form.Item
                   label="密码"
-                  name="password"
-                  rules={[
-                    { required: true, message: '密码是必填项' },
-                    { min: 6, message: '密码至少需要6个字符' },
-                  ]}
+                  validateStatus={errors.password ? 'error' : ''}
+                  help={errors.password?.message}
                 >
-                  <Input.Password />
+                  <Controller
+                    name="password"
+                    control={control}
+                    render={({ field }) => <Input.Password {...field} />}
+                  />
                 </Form.Item>
 
                 <Form.Item
                   label="确认密码"
-                  name="confirmPassword"
-                  dependencies={['password']}
-                  rules={[
-                    { required: true, message: '确认密码是必填项' },
-                    ({ getFieldValue }) => ({
-                      validator(_, value) {
-                        if (!value || getFieldValue('password') === value) {
-                          return Promise.resolve()
-                        }
-                        return Promise.reject(new Error('密码必须匹配'))
-                      },
-                    }),
-                  ]}
+                  validateStatus={errors.confirmPassword ? 'error' : ''}
+                  help={errors.confirmPassword?.message}
                 >
-                  <Input.Password />
+                  <Controller
+                    name="confirmPassword"
+                    control={control}
+                    render={({ field }) => <Input.Password {...field} />}
+                  />
                 </Form.Item>
 
                 <Title level={4}>联系信息</Title>
                 <Form.Item
                   label="地址"
-                  name="address"
-                  rules={[{ required: true, message: '地址是必填项' }]}
+                  validateStatus={errors.address ? 'error' : ''}
+                  help={errors.address?.message}
                 >
-                  <Input />
+                  <Controller
+                    name="address"
+                    control={control}
+                    render={({ field }) => <Input {...field} />}
+                  />
                 </Form.Item>
 
                 <Form.Item
                   label="城市"
-                  name="city"
-                  rules={[{ required: true, message: '城市是必填项' }]}
+                  validateStatus={errors.city ? 'error' : ''}
+                  help={errors.city?.message}
                 >
-                  <Input />
+                  <Controller
+                    name="city"
+                    control={control}
+                    render={({ field }) => <Input {...field} />}
+                  />
                 </Form.Item>
 
                 <Form.Item
                   label="邮编"
-                  name="zipCode"
-                  rules={[{ required: true, message: '邮编是必填项' }]}
+                  validateStatus={errors.zipCode ? 'error' : ''}
+                  help={errors.zipCode?.message}
                 >
-                  <Input />
+                  <Controller
+                    name="zipCode"
+                    control={control}
+                    render={({ field }) => <Input {...field} />}
+                  />
                 </Form.Item>
 
                 <Form.Item
                   label="国家"
-                  name="country"
-                  rules={[{ required: true, message: '国家是必填项' }]}
+                  validateStatus={errors.country ? 'error' : ''}
+                  help={errors.country?.message}
                 >
-                  <Select
-                    placeholder="选择国家"
-                    options={COUNTRY_OPTIONS}
+                  <Controller
+                    name="country"
+                    control={control}
+                    render={({ field }) => (
+                      <Select {...field} placeholder="选择国家" options={COUNTRY_OPTIONS} />
+                    )}
                   />
                 </Form.Item>
 
                 <Title level={4}>订单信息</Title>
                 <Form.Item
                   label="产品"
-                  name="product"
-                  rules={[{ required: true, message: '请选择一个产品' }]}
+                  validateStatus={errors.product ? 'error' : ''}
+                  help={errors.product?.message}
                 >
-                  <Select
-                    placeholder="选择产品"
-                    options={PRODUCT_OPTIONS}
+                  <Controller
+                    name="product"
+                    control={control}
+                    render={({ field }) => (
+                      <Select {...field} placeholder="选择产品" options={PRODUCT_OPTIONS} />
+                    )}
                   />
                 </Form.Item>
 
                 <Form.Item
                   label="数量"
-                  name="quantity"
-                  rules={[
-                    { required: true, message: '数量是必填项' },
-                    { type: 'number', min: 1, message: '数量至少为1' },
-                  ]}
+                  validateStatus={errors.quantity ? 'error' : ''}
+                  help={errors.quantity?.message}
                 >
-                  <InputNumber min={1} style={{ width: '100%' }} />
+                  <Controller
+                    name="quantity"
+                    control={control}
+                    render={({ field }) => (
+                      <InputNumber {...field} min={1} style={{ width: '100%' }} />
+                    )}
+                  />
                 </Form.Item>
 
                 <Form.Item
                   label="付款方式"
-                  name="paymentMethod"
-                  rules={[{ required: true, message: '请选择一种付款方式' }]}
+                  validateStatus={errors.paymentMethod ? 'error' : ''}
+                  help={errors.paymentMethod?.message}
                 >
-                  <Select
-                    placeholder="选择付款方式"
-                    options={PAYMENT_OPTIONS}
+                  <Controller
+                    name="paymentMethod"
+                    control={control}
+                    render={({ field }) => (
+                      <Select {...field} placeholder="选择付款方式" options={PAYMENT_OPTIONS} />
+                    )}
                   />
                 </Form.Item>
 

@@ -1,14 +1,14 @@
-.complex-form-page {
-  .ant-card {
-    max-width: 800px;
-    margin: 0 auto;
+.form-item {
+  margin-bottom: 24px;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
   }
 
-  .ant-form-item {
-    margin-bottom: 24px;
-  }
-
-  .ant-typography {
-    margin: 24px 0 16px;
+  .error-message {
+    color: #ff4d4f;
+    font-size: 14px;
+    margin-top: 4px;
   }
 }
