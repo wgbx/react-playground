@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
-import './index.module.scss'
+import './index.scss'
 
 interface FormData {
   username: string
@@ -29,7 +29,7 @@ export default function Form() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex-col">
+    <form onSubmit={handleSubmit(onSubmit)} className="form-page flex-col">
       <label>用户名: </label>
       <input {...register('username')} />
       {errors.username && <p className="error-tip">{errors.username.message}</p>}

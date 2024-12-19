@@ -1,4 +1,5 @@
 import type { RouteProps } from 'react-router'
+import ComplexForm from '@/pages/complexForm'
 import Form from '@/pages/form'
 import Home from '@/pages/home'
 import ReRender from '@/pages/reRender'
@@ -20,5 +21,9 @@ export const ROUTER: RouteProps[] = [
   {
     path: '/form',
     element: <Form />,
+  },
+  {
+    path: '/complexForm',
+    element: <ComplexForm />,
   },
 ]

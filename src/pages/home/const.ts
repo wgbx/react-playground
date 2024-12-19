@@ -7,4 +7,8 @@ export const PAGE = [
     name: '表单',
     path: '/form',
   },
+  {
+    name: '复杂表单',
+    path: '/complexForm',
+  },
 ]
