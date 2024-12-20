@@ -7,12 +7,16 @@ interface ButtonProps {
 }
 
 function Button(props: ButtonProps) {
-  console.log('Button 渲染')
   const { children, onClick, style } = props
+  console.info('Button 渲染')
+
   return (
-    <button onClick={onClick} style={style}>
-      {children}
-    </button>
+    <div>
+      <button onClick={onClick} style={style}>
+        {children}
+      </button>
+      <div className="mt-2">{new Date().getTime()}</div>
+    </div>
   )
 }
 
